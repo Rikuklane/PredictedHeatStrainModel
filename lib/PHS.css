@@ -1,0 +1,173 @@
+* {
+    margin:0;
+    padding:0;
+}
+
+body, ol{
+    padding:5px;
+    margin:5px;
+}
+
+ul, li{
+    padding:3px;
+    margin:3px;
+}
+
+/* wtab utility */
+
+.wtab_menu ul{
+    padding:0;
+    margin-bottom:0;
+}
+.wtab_menu li{
+    list-style: none;
+    background-color: #bbb;
+    border:1px solid #aaa;
+    padding:10px 5px;
+    margin-right:2px;
+    display:inline-block;
+    width:100px;
+    cursor: pointer;
+    border-bottom:none;
+}
+li.wtab_active{
+    background-color: #f1f1f1;
+    top:1px;
+    position:relative;
+    padding-top:11px;
+    z-index: 100;
+}
+.wtab_cont{
+    display:none;
+    padding:10px;
+}
+.wtab_cont.wtab_active{
+    display:block;
+}
+
+.par_stack .par_elem{
+    float:left;
+}
+.par_float_left{
+    float:left;
+}
+.par_clear{
+    clear:both;
+}
+.par_elem > *{
+    vertical-align:middle;
+}
+
+.par_elem{
+    width:365px;
+    overflow: hidden;
+}
+
+.par_symb, .par_unit, .par_descr{
+    display:inline-block;
+    width: 60px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.par_descr{
+    width: 170px;
+}
+.par_symb{
+    width:60px;
+    font-weight:bold;
+    text-align:right;
+}
+.par_local .par_symb{
+    font-weight:normal;
+}
+.par_val{
+    margin-left:2px;
+    margin-right:2px;
+    text-align:right;
+    width: 60px;
+}
+.par_unit:before{
+    content:"[";
+}
+.par_unit:after{
+    content:"]";
+}
+.par_used_as_inp{
+    border:1px solid grey;
+}
+
+#ext_Trad .par_elem, .ext_info{
+    background-color:#b0c4de;
+}
+#ext_Trad .par_symb{
+    width:80px;
+}
+#ext_Trad .par_descr{
+    width:135px;
+}
+#zext_Trad .par_elem{
+    width:370px;
+}
+
+#ext_humidity .par_elem, .ext_info{
+    background-color:#b0c4de;
+}
+#ext_humidity .par_symb{
+    font-weight:normal;
+    width:80px;
+}
+#ext_humidity .par_descr{
+    width:135px;
+}
+#zext_humidity .par_elem{
+    width:370px;
+}
+
+table {
+    font-family: verdana,arial,sans-serif;
+    color: black;
+    border-width: 2px;
+    border-color: black;
+    border-style: solid;
+    border-collapse: collapse;
+}
+table tr:hover {
+    background-color:#d4e3e5;
+}
+
+tr.cname {
+    background-color: lightgrey;
+}
+table th {
+    border-width: 1px;
+    padding: 4px;
+    border-style: none solid;
+    text-align:center;
+}
+table td {
+    border-width: 1px;
+    padding: 4px;
+    border-style: none solid;
+    text-align:right;
+}
+.rim5, rim10{
+    background-color:whitesmoke;
+}
+
+.char_label0{
+    color: rgb(151,187,205);
+    margin-left:5em;
+}
+.char_label1{
+    color: rgb(121,255,77);
+    margin-left:2em;
+}
+.char_label2{
+    color: rgb(150,0,235);
+    margin-left:2em;
+}
+.char_label3{
+    color: rgb(0,0,235);
+    margin-left:2em;
+}
+
