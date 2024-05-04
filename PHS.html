@@ -7,7 +7,7 @@
     <title>PHS Calculation</title>
   </head>
   <body onload="wci.onload('par');">
-    <div>PHS simulation based on the annex E in ISO/FDIS 7933</div>
+    <h1>PHS simulation based on the annex E in ISO/FDIS 7933</h1>
     <div>Note: This is work in progress!!!</div>
     <noscript>
       <div>
@@ -25,71 +25,60 @@
     </ul>
     <!-- tab -->
     <div id="wtab_cont_par" class="wtab_cont wtab_active">
-      <p>Input parmeters simulation</p>
-      <div class="par_elem" id="par_accl"></div>
-      <div class="par_elem" id="par_drink"></div>
-      <div class="par_elem" id="par_height"></div>
-      <div class="par_stack">
-        <div class="par_elem" id="par_mass"></div>
-        <div class="par_elem par_local" id="par_Adu"></div>
-        <div class="par_clear"></div>
+      <h2>Input parameters simulation</h2>
+      <div class="parameter-container">
+        <div class="parameter" id="par_accl"></div>
+        <div class="parameter" id="par_drink"></div>
+        <div class="parameter" id="par_height"></div>
+        <div class="par_stack">
+          <div class="parameter" id="par_mass"></div>
+          <div class="parameter par_local" id="par_Adu"></div>
+        </div>
+        <div class="parameter" id="par_sim_mod"></div>
       </div>
-      <div class="par_elem" id="par_sim_mod"></div>
-      <p>Input parmeters time step</p>
-      <div class="par_elem" id="par_post"></div>
-      <div class="par_elem" id="par_Tair"></div>
-      <div class="par_elem" id="par_v_air"></div>
-      <!-- humidity -->
-      <div class="par_stack">
-        <div class="par_elem par_float_left" id="par_Pw_air"></div>
-        <div class="par_float_left">
+      <h2>Input parameters time step</h2>
+      <div class="parameter-container">
+        <div class="parameter" id="par_post"></div>
+        <div class="parameter" id="par_Tair"></div>
+        <div class="parameter" id="par_v_air"></div>
+        <!-- humidity -->
+        <div class="parameter_button_stack">
+          <div class="parameter par_float_left" id="par_Pw_air"></div>
           <button onclick="wci.toggle_visibility('#ext_humidity');">+-</button>
-          <!-- input type="button" value="error" id="humid_ext_show_use"></input -->
         </div>
-        <div class="par_clear"></div>
-      </div>
-      <div id="ext_humidity" style="display: none;">
+        <div id="ext_humidity" style="display: none;">
+          <div class="parameter" id="par_humid_RH"></div>
+          <div class="parameter" id="par_humid_W"></div>
+          <div class="parameter" id="par_humid_Tdew"></div>
+          <div class="parameter" id="par_humid_Twb"></div>
+          <div class="parameter" id="par_humid_Pws"></div>
+          <div class="parameter" id="par_humid_Patm"></div>
+          <div class="par_float_left ext_info">This calculation is also using Tair</div>
+        </div>
+        <!-- Trad -->
+        <div class="parameter_button_stack">
+          <div class="parameter par_float_left" id="par_Trad"></div>
+          <button onclick="wci.toggle_visibility('#ext_Trad');">+-</button>
+        </div>
+        <div id="ext_Trad" style="display: none;">
+          <!-- div class="parameter par_local" id="par_globe_Trad"></div -->
+          <div class="parameter par_local" id="par_globe_Tg"></div>
+          <div class="parameter par_local" id="par_globe_emi"></div>
+          <div class="parameter par_local" id="par_globe_diam"></div>
+          <div class="par_float_left ext_info">The calculation is also using Tair and v_air</div>
+        </div>
         <div class="par_stack">
-          <div class="par_elem" id="par_humid_RH"></div>
-          <div class="par_elem" id="par_humid_W"></div>
-          <div class="par_elem" id="par_humid_Tdew"></div>
-          <div class="par_elem" id="par_humid_Twb"></div>
-          <div class="par_elem" id="par_humid_Pws"></div>
-          <div class="par_elem" id="par_humid_Patm"></div>
-          <div class="par_float_left ext_info">
-          This calculation is also using Tair</div>
-          <div class="par_clear"></div>
+          <div class="parameter" id="par_Met"></div>
+          <div class="parameter par_local" id="par_Met_W"></div>
         </div>
+        <div class="parameter" id="par_Icl"></div>
+        <div class="parameter" id="par_im_st"></div>
+        <div class="parameter" id="par_fAref"></div>
+        <div class="parameter" id="par_Fr"></div>
+        <div class="parameter" id="par_walk_dir"></div>
+        <div class="parameter" id="par_v_walk"></div>
+        <div class="parameter" id="par_work"></div>
       </div>
-      <!-- Trad -->
-      <div class="par_elem par_float_left" id="par_Trad"></div>
-      <div class="par_float_left">
-        <button onclick="wci.toggle_visibility('#ext_Trad');">+-</button>
-      </div>
-      <div class="par_clear"></div>
-      <div id="ext_Trad" style="display: none;">
-        <div class="par_stack">
-          <!-- div class="par_elem par_local" id="par_globe_Trad"></div -->
-          <div class="par_elem par_local" id="par_globe_Tg"></div>
-          <div class="par_elem par_local" id="par_globe_emi"></div>
-          <div class="par_elem par_local" id="par_globe_diam"></div>
-          <div class="par_float_left ext_info">
-          The calculation is also using Tair and v_air</div>
-          <div class="par_clear"></div>
-        </div>
-      </div>
-      <div class="par_stack">
-        <div class="par_elem" id="par_Met"></div>
-        <div class="par_elem par_local" id="par_Met_W"></div>
-        <div class="par_clear"></div>
-      </div>
-      <div class="par_elem" id="par_Icl"></div>
-      <div class="par_elem" id="par_im_st"></div>
-      <div class="par_elem" id="par_fAref"></div>
-      <div class="par_elem" id="par_Fr"></div>
-      <div class="par_elem" id="par_walk_dir"></div>
-      <div class="par_elem" id="par_v_walk"></div>
-      <div class="par_elem" id="par_work"></div>
       <div id ="par_start">
         <button type="button" onclick="wci.doPHS()">
           Start simulation</button>
