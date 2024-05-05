@@ -18,7 +18,7 @@ Tasks TODO:
    - The start of the next has to be based on the previous
      - Simulation result at end has to be the start point of the next time step
      - (time  Tre	D_Tre	SWtotg	Dwl50	Dwl95)
- - [ ] There are some constraints that we would like to have outside the normal boundaries
+ - [x] There are some constraints that we would like to have outside the normal boundaries
    - Show warnings to the user if the limit is outside the normal boundaries
    - Don't limit the user from using these values
  - [ ] Add a user interface for the inputs
