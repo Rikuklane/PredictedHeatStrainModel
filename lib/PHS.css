@@ -71,54 +71,53 @@ ul, li {
 
 button {
     flex: 1;
-    margin-right: 5px; /* Adjust margin as needed */
+    margin-right: 5px;
 }
 
 .parameter_button_stack {
     display: flex;
 }
 
-.par_symb, .par_unit, .par_descr {
+.parameter_symbol, .parameter_unit, .parameter_description {
     display: inline-block;
     width: 60px;
     white-space: nowrap;
     overflow: hidden;
 }
 
-.par_descr {
+.parameter_description {
     width: 50vh;
 }
 
-.par_symb {
-    width: 60px;
+.parameter_symbol {
+    width: 80px;
     font-weight: bold;
     text-align: right;
 }
 
-.par_local .par_symb {
+.parameter_local .parameter_symbol {
     font-weight: normal;
 }
 
-.par_val {
+.parameter_value {
     margin-left: 2px;
     margin-right: 2px;
     text-align: right;
     width: 60px;
 }
 
-.par_unit:before {
+.parameter_unit:before {
     content: "[";
 }
 
-.par_unit:after {
+.parameter_unit:after {
     content: "]";
 }
 
-.par_used_as_inp {
+.parameter_used_as_input {
     border: 1px solid grey;
 }
 
-/* Additional styles */
 #ext_Trad .parameter,
 #ext_Trad .ext_info,
 #ext_humidity .parameter,
@@ -126,8 +125,8 @@ button {
     background-color: #b0c4de;
 }
 
-#ext_Trad .par_symb,
-#ext_humidity .par_symb {
+#ext_Trad .parameter_symbol,
+#ext_humidity .parameter_symbol {
     width: 80px;
 }
 
@@ -163,13 +162,11 @@ table td {
     text-align: center;
 }
 
-/* Rim styles */
 .rim5,
 .rim10 {
     background-color: whitesmoke;
 }
 
-/* Character label styles */
 .char_label0 {
     color: rgb(151, 187, 205);
     margin-left: 5em;
