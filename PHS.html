@@ -78,10 +78,11 @@
         <div class="parameter" id="par_walk_dir"></div>
         <div class="parameter" id="par_v_walk"></div>
         <div class="parameter" id="par_work"></div>
+        <div class="parameter" id="par_timestep"></div>
       </div>
       <div id ="par_start">
-        <button type="button" onclick="wci.doPHS()">
-          Start simulation</button>
+        <button type="button" onclick="wci.doPHS(true)">Start simulation</button>
+        <button type="button" onclick="wci.doPHS(false)">Add timestep</button>
       </div>
       <div><p>Input parameters time step</p>
         <div id="sim_inparam_step">No simulation done</div>
