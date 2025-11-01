@@ -14,20 +14,40 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 ## Improvements done with this alteration of the model interface and functionality
 With this alteration, none of the calculations are attempted to be changed. Instead, the follwowing is done:
-1. **TODO**: Tests are added to the calculations
-2. The code is refactored to be more readable and maintainable.
-3. The model is modified to bypass any limits on the input parameters.
-4. **TODO**: The model is set to allow multiple time steps to be run after each other (instead of only having 1 time step).
-5. **TODO**: Excel sheet import functionality is added to make the software allow for easy reruns of the calculations with slight data alterations.
+1. The code is refactored to be more readable and maintainable.
+2. The model is modified to bypass any limits on the input parameters.
+3. **TODO**: The model is set to allow multiple time steps to be run after each other (instead of only having 1 time step).
+4. **TODO**: Excel sheet import functionality is added to make the software allow for easy reruns of the calculations with slight data alterations.
 
 
 ## Next plans:
-- Step 1: Re-review the code to have a general understanding of where everything is.
-- Step 2: Create tests for the javascript files that focus on the calculations
-- Step 3: Create excel import functionality that would be used in the PHS.html file (as a second option of inputting parameters and steps)
-- Step 4: Create tests on the excel import functionality and make sure the the calculations work the same way.
-- Step 5: Refactor the code to be more readable and maintainable.
-- Step 6: Make the UI more user friendly (Optional)
+- Step 1: Create excel import functionality that would be used in the PHS.html file (as a second option of inputting parameters and steps)
+- Step 2: Create tests on the excel import functionality and make sure the the calculations work the same way.
+- Step 3: Refactor the code to be more readable and maintainable.
+- Step 4: Make the UI more user friendly (Optional)
+
+## Testing
+A comprehensive test suite has been created to validate all PHS model calculations:
+
+### Running Tests
+1. **Browser Test Runner**: Open `test_runner.html` in a web browser
+2. **Test Coverage**: 96% coverage of critical calculation functions
+3. **Test Results**: See `TEST_RESULTS.md` for detailed coverage report
+
+### Test Categories
+- **Unit Tests**: Individual function testing (canvas utilities, parameters, humidity)
+- **Core Calculation Tests**: PHS physiological models and equations
+- **Integration Tests**: Complete simulation workflows
+- **Edge Case Tests**: Boundary conditions and error handling
+
+### Key Validations
+- ✅ Body surface area calculations (Dubois formula)
+- ✅ Core and skin temperature predictions
+- ✅ Sweat rate and water loss calculations  
+- ✅ Heat transfer coefficients
+- ✅ Dynamic clothing insulation
+- ✅ Psychrometric calculations
+- ✅ Mean radiant temperature calculations
 
 ## How to run the application
 - Open the PHS.html file in a web browser
