@@ -625,7 +625,7 @@
             }
         });
 
-        // Data Table Object Tests
+// Data Table Object Tests
         runner.test('Data table creation and column management', () => {
             const table = boj.data_table_obj.new_data_table();
             assert(table !== undefined, 'Data table should be created');
@@ -818,7 +818,6 @@
             assert(csv.includes('37.0'), 'CSV should include temperature data');
             assert(csv.includes('34.1'), 'CSV should include skin temperature data');
         });
-
         // Run all tests when page loads
         window.onload = function() {
             setTimeout(() => {
