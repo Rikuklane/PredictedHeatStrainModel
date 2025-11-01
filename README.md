@@ -13,18 +13,17 @@ Neither the name of the Department of Design Sciences (EAT), Lund University nor
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## Improvements done with this alteration of the model interface and functionality
-With this alteration, none of the calculations are attempted to be changed. Instead, the follwowing is done:
-1. The code is refactored to be more readable and maintainable.
-2. The model is modified to bypass any limits on the input parameters.
-3. **TODO**: The model is set to allow multiple time steps to be run after each other (instead of only having 1 time step).
-4. **TODO**: Excel sheet import functionality is added to make the software allow for easy reruns of the calculations with slight data alterations.
-
+With this alteration, none of the calculations are attempted to be changed. Instead, the following is done:
+1. Tests are added to validate the calculations.
+2. The code is refactored to be more readable and maintainable.
+3. The model is modified to bypass any limits on the input parameters.
+4. The model is set to allow multiple time steps to be run after each other (instead of only having 1 time step).
+5. **TODO**: Excel sheet import functionality is added to make the software allow for easy reruns of the calculations with slight data alterations.
 
 ## Next plans:
 - Step 1: Create excel import functionality that would be used in the PHS.html file (as a second option of inputting parameters and steps)
 - Step 2: Create tests on the excel import functionality and make sure the the calculations work the same way.
-- Step 3: Refactor the code to be more readable and maintainable.
-- Step 4: Make the UI more user friendly (Optional)
+- Step 3: Make the UI more user friendly (Optional)
 
 ## Testing
 A comprehensive test suite has been created to validate all PHS model calculations:
