@@ -22,6 +22,7 @@ The original PHS model calculations remain unchanged. The following improvements
 - **Timestep validation** - Prevents duplicate or past end times with user-friendly error messages
 - **Tab navigation interface** - Clean tabbed UI for Parameters, Graph, Table, and About sections
 - **UI button state management** - Proper enable/disable logic for workflow control
+- **Modernized UI** - Updated interface with a more modern feel and improved user experience.
 
 ### 📊 Data Management & Export
 - **Excel export functionality** - Professional multi-sheet Excel files with proper formatting
@@ -37,7 +38,7 @@ The original PHS model calculations remain unchanged. The following improvements
 3. Set environmental conditions (temperature, metabolism, etc.)
 4. Click "Start simulation" to begin the first timestep
 5. Add additional timesteps with "Add timestep" (validation prevents duplicate/past times)
-6. Export results with Excel export buttons
+6. Export results using the "Export to Excel" dropdown button (appears after first simulation)
 
 ## Excel Export Features
 - **Input Parameters** - Combined simulation + step parameters in one sheet

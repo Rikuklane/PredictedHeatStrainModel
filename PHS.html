@@ -7,8 +7,6 @@
     <title>PHS Calculation</title>
   </head>
   <body onload="wci.onload('par');">
-    <h1>PHS simulation based on the annex E in ISO/FDIS 7933</h1>
-    <div>Note: This is work in progress!!!</div>
     <noscript>
       <div>
         JavaScript is <strong>disabled</strong> in your web browser
@@ -16,13 +14,18 @@
       </div>
     </noscript>
 
-    <ul class="wtab_menu">
-      <li id="wtab_menu_par" class="wtab_active" onclick="wci.wtab_select(this);">Parameters</li>
-      <li id="wtab_menu_graph" onclick="wci.wtab_select(this);">Graph</li>
-      <li id="wtab_menu_table" onclick="wci.wtab_select(this);">Table</li>
-      <li id="wtab_menu_all" onclick="wci.wtab_select_all(['par','graph','table']);">All</li>
-      <li id="wtab_menu_about" onclick="wci.wtab_select(this);">About</li>
-    </ul>
+    <div class="header-container">
+      <ul class="wtab_menu">
+        <li id="wtab_menu_par" class="wtab_active" onclick="wci.wtab_select(this);">Parameters</li>
+        <li id="wtab_menu_graph" onclick="wci.wtab_select(this);">Graph</li>
+        <li id="wtab_menu_table" onclick="wci.wtab_select(this);">Table</li>
+        <li id="wtab_menu_all" onclick="wci.wtab_select_all(['par','graph','table']);">All</li>
+        <li id="wtab_menu_about" onclick="wci.wtab_select(this);">About</li>
+      </ul>
+      <div class="header-title">
+        <h1>PHS simulation based on the annex E in ISO/FDIS 7933</h1>
+      </div>
+    </div>
     <!-- tab -->
     <div id="wtab_cont_par" class="wtab_cont wtab_active">
       <h2>Input parameters simulation</h2>
@@ -44,7 +47,7 @@
         <!-- humidity -->
         <div class="parameter_button_stack">
           <div class="parameter parameter_float_left" id="par_Pw_air"></div>
-          <button onclick="wci.toggle_visibility('#ext_humidity');">+-</button>
+          <button onclick="wci.toggle_visibility('#ext_humidity');"><span class="expand-icon">⇅</span> Options</button>
         </div>
         <div id="ext_humidity" style="display: none;">
           <div class="parameter" id="par_humid_RH"></div>
@@ -58,7 +61,7 @@
         <!-- Trad -->
         <div class="parameter_button_stack">
           <div class="parameter parameter_float_left" id="par_Trad"></div>
-          <button onclick="wci.toggle_visibility('#ext_Trad');">+-</button>
+          <button onclick="wci.toggle_visibility('#ext_Trad');"><span class="expand-icon">⇅</span> Options</button>
         </div>
         <div id="ext_Trad" style="display: none;">
           <!-- div class="parameter parameter_local" id="par_globe_Trad"></div -->
@@ -80,14 +83,24 @@
         <div class="parameter" id="par_work"></div>
         <div class="parameter" id="par_timestep"></div>
       </div>
-      <div id ="par_start">
-        <button type="button" onclick="wci.doPHS(true)">Start simulation</button>
-        <button type="button" onclick="wci.doPHS(false)">Add timestep</button>
-      </div>
-      <div id ="par_export">
-        <button type="button" onclick="wci.exportAllData()">Export all data to Excel</button>
-        <button type="button" onclick="wci.exportStepData()">Export input data to Excel</button>
-        <button type="button" onclick="wci.exportResults()">Export results to Excel</button>
+      <div id ="par_buttons" class="button-row">
+        <div class="button-left">
+          <button type="button" onclick="wci.doPHS(true)">Start simulation</button>
+          <button type="button" onclick="wci.doPHS(false)">Add timestep</button>
+        </div>
+        <div class="button-right">
+          <div class="dropdown">
+            <button type="button" class="export-dropdown-btn" onclick="wci.toggleDropdown()" disabled>
+              <span class="excel-icon">📊</span> Export to Excel
+              <span class="dropdown-arrow">▼</span>
+            </button>
+            <div id="exportDropdown" class="dropdown-content">
+              <a href="#" onclick="wci.exportAllData(); wci.toggleDropdown(); return false;">📊 Export all data to Excel</a>
+              <a href="#" onclick="wci.exportStepData(); wci.toggleDropdown(); return false;">📋 Export input data to Excel</a>
+              <a href="#" onclick="wci.exportResults(); wci.toggleDropdown(); return false;">📈 Export results to Excel</a>
+            </div>
+          </div>
+        </div>
       </div>
       <div><p>Input parameters time step</p>
         <div id="sim_inparam_step">No simulation done</div>
@@ -112,23 +125,13 @@
     </div>
     <!-- tab -->
     <div id="wtab_cont_about" class="wtab_cont">
-      <p>This is an application which uses PHS.js which is a JavaScript implementation
-      of the Predicted Heat Strain (PHS) model described in the standard
-      "ISO/FDIS 7933 Ergonomics of the thermal environment &mdash;
-      Analytical determination and interpretation of heat stress using
-      calculation of the predicted heat strain".
-      PHS.js is based on
-      "Predicted Heat Strain (PHS) model: computation program written in Quick Basic"
-      in Annex E of the standard.</p>
+      <p>This is an application which uses PHS.js which is a JavaScript implementation of the Predicted Heat Strain (PHS) model described in the standard "ISO/FDIS 7933 Ergonomics of the thermal environment — Analytical determination and interpretation of heat stress using calculation of the predicted heat strain". PHS.js is based on "Predicted Heat Strain (PHS) model: computation program written in Quick Basic" in Annex E of the standard.</p>
       <p>The following links are opened in a separate frame</p>
-      <ul>
-        <li><a href="PHS_about.html" target="_blank">The PHS
-        calculation and its development</a></li>
-        <li><a href="PHS_how_to_use.html" target="_blank">How to use the
-        PHS.js library</a></li>
+      <ul class="about-links">
+        <li><a href="PHS_about.html" target="_blank">The PHS calculation and its development</a></li>
+        <li><a href="PHS_how_to_use.html" target="_blank">How to use the PHS.js library</a></li>
         <li><a href="PHS.js.html" target="_blank">PHS.js code</a></li>
-        <li><a href="PHS_rel_ISO7933.js.html" target="_blank">PHS.js code
-        with code from annex E in ISO/FDIS 7933 as comments.</a></li>
+        <li><a href="PHS_rel_ISO7933.js.html" target="_blank">PHS.js code with code from annex E in ISO/FDIS 7933 as comments.</a></li>
         <li><a href="PHS_license.html" target="_blank">PHS Calculation License</a></li>
       </ul>
     </div>
