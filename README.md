@@ -52,3 +52,7 @@ Open `test_runner.html` in a browser to run comprehensive tests covering:
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 - No server required - fully client-side
 - Optional: Excel software for viewing exported files
+
+## Future Plans
+- **Input Validation Enhancement** - Comprehensive parameter validation with proper min/max values based on scientific standards
+- **Excel Import Functionality** - Ability to load simulation parameters from Excel files for batch processing and reproducible research
