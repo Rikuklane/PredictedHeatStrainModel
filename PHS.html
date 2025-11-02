@@ -84,6 +84,11 @@
         <button type="button" onclick="wci.doPHS(true)">Start simulation</button>
         <button type="button" onclick="wci.doPHS(false)">Add timestep</button>
       </div>
+      <div id ="par_export">
+        <button type="button" onclick="wci.exportAllData()">Export all data to Excel</button>
+        <button type="button" onclick="wci.exportStepData()">Export input data to Excel</button>
+        <button type="button" onclick="wci.exportResults()">Export results to Excel</button>
+      </div>
       <div><p>Input parameters time step</p>
         <div id="sim_inparam_step">No simulation done</div>
       </div>
@@ -140,6 +145,7 @@
     <script type="text/javascript" src="lib/data_table_obj.js"></script>
     <script type="text/javascript" src="lib/PHS_run_simulation.js"></script>
     <script type="text/javascript" src="lib/PHS_wci.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script type="text/javascript"> const wci = boj.PHS_wci;</script>
   </body>
 </html>

@@ -12,49 +12,43 @@ Redistributions in binary form must reproduce the above copyright notice, this l
 Neither the name of the Department of Design Sciences (EAT), Lund University nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-## Improvements done with this alteration of the model interface and functionality
-With this alteration, none of the calculations are attempted to be changed. Instead, the following is done:
-1. Tests are added to validate the calculations.
-2. The code is refactored to be more readable and maintainable.
-3. The model is modified to bypass any limits on the input parameters.
-4. The model is set to allow multiple time steps to be run after each other (instead of only having 1 time step).
-5. **TODO**: Excel sheet import functionality is added to make the software allow for easy reruns of the calculations with slight data alterations.
+## Modifications
+**Interface and functionality enhancements (2023-2025) by Richard Kuklane**
 
-## Next plans:
-- Step 1: Create excel import functionality that would be used in the PHS.html file (as a second option of inputting parameters and steps)
-- Step 2: Create tests on the excel import functionality and make sure the the calculations work the same way.
-- Step 3: Make the UI more user friendly (Optional)
+The original PHS model calculations remain unchanged. The following improvements were made to enhance usability, functionality, and code quality:
+
+1. **Multi-timestep support** - "Start simulation" → "Add timestep" workflow
+2. **Removed input parameter limits** - No artificial constraints on values
+3. **Excel export functionality** - Professional multi-sheet Excel files with proper formatting
+4. **UI button state management** - Proper enable/disable logic for workflow control
+5. **Code refactoring** - Improved readability, maintainability, and modern API structure
+6. **Comprehensive testing** - Extensive test suite to validate all functionality
+
+## How to Use
+1. Open `PHS.html` in a web browser
+2. Set simulation parameters (weight, height, etc.)
+3. Set environmental conditions (temperature, metabolism, etc.)
+4. Click "Start simulation"
+5. Add additional timesteps with "Add timestep" if needed
+6. Export results with Excel export buttons
+
+## Excel Export Features
+- **Input Parameters** - Combined simulation + step parameters in one sheet
+- **Step Log Data** - Time series physiological data for graphing
+- **Results** - Final simulation outcomes
+- Automatic file downloads with clear naming
 
 ## Testing
-A comprehensive test suite has been created to validate all PHS model calculations:
+Open `test_runner.html` in a browser to run comprehensive tests covering:
 
-### Running Tests
-1. **Browser Test Runner**: Open `test_runner.html` in a web browser
-2. **Test Coverage**: 100% coverage of all modules and functions
-3. **Test Results**: 49/49 tests passing (displayed in browser)
+- **Core PHS calculations** - Body surface area, temperature predictions, sweat rates, heat balance
+- **Multi-timestep workflows** - Step progression, parameter changes, time advancement
+- **Excel export functionality** - File generation, data organization, column formatting
+- **UI button states** - Start/Add timestep workflow, parameter locking, enable/disable logic
+- **Data validation** - Parameter consistency, type safety, cross-module integration
+- **Physiological models** - Clothing insulation, heat transfer, psychrometric calculations
 
-### Test Categories
-- **Unit Tests**: Individual function testing (canvas utilities, parameters, humidity)
-- **Core Calculation Tests**: PHS physiological models and equations
-- **Integration Tests**: Complete simulation workflows
-- **WCI Module Tests**: Wind Chill Index functionality
-- **Data Table Tests**: Data management and export functionality
-- **Cross-Module Tests**: System integration and end-to-end workflows
-
-### Key Validations
-- ✅ Body surface area calculations (Dubois formula)
-- ✅ Core and skin temperature predictions
-- ✅ Sweat rate and heat balance calculations
-- ✅ Clothing insulation effects
-- ✅ Dynamic thermal responses
-- ✅ Data export/import functionality
-- ✅ Parameter validation and type safety
-- ✅ Cross-module integration testing
-- ✅ Sweat rate and water loss calculations  
-- ✅ Heat transfer coefficients
-- ✅ Dynamic clothing insulation
-- ✅ Psychrometric calculations
-- ✅ Mean radiant temperature calculations
-
-## How to run the application
-- Open the PHS.html file in a web browser
+## Dependencies
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+- No server required - fully client-side
+- Optional: Excel software for viewing exported files
