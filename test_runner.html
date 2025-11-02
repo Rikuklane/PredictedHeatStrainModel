@@ -1739,6 +1739,107 @@
             assert(true, 'Test suite completed successfully');
         });
 
+        // Test: Duplicate timestep validation
+        runner.test('Duplicate timestep prevention test', function() {
+            // Reset and set up initial simulation
+            boj.PHS.reset();
+            boj.PHS.par_swarm_sim.set_pid('weight', 70);
+            boj.PHS.par_swarm_sim.set_pid('height', 1.75);
+            boj.PHS.par_swarm_sim.set_pid('sim_mod', 1);
+            
+            // Set up first step parameters
+            boj.PHS.par_swarm_step.set_pid('Met', 150);
+            boj.PHS.par_swarm_step.set_pid('Tair', 25);
+            boj.PHS.par_swarm_step.set_pid('timestep', 15);
+            
+            // Start simulation (first step)
+            boj.PHS_wci.doPHS(true);
+            
+            console.log('*** DUPLICATE TIMESTEP TEST - FIRST STEP COMPLETED ***');
+            
+            // Try to add a second step with the same timestep (should fail)
+            boj.PHS.par_swarm_step.set_pid('timestep', 15); // Same as first step
+            
+            console.log('*** DUPLICATE TIMESTEP TEST - ATTEMPTING DUPLICATE STEP ***');
+            
+            let errorThrown = false;
+            try {
+                boj.PHS_wci.doPHS(false); // This should throw an error
+                console.log('*** DUPLICATE TIMESTEP TEST - NO ERROR THROWN ***');
+            } catch (error) {
+                errorThrown = true;
+                console.log('*** DUPLICATE TIMESTEP TEST - ERROR CAUGHT ***:', error.message);
+                assert(error.message.includes('must be greater than previous step end time'), 
+                    `Expected validation error, got: ${error.message}`);
+            }
+            
+            assert(errorThrown, 'Expected error to be thrown when adding duplicate timestep');
+            
+            // Now try with a valid later timestep (should succeed)
+            boj.PHS.par_swarm_step.set_pid('timestep', 30); // Later than first step
+            try {
+                boj.PHS_wci.doPHS(false); // This should succeed
+                assert(true, 'Valid timestep should be accepted');
+            } catch (error) {
+                assert(false, `Valid timestep should not throw error: ${error.message}`);
+            }
+        });
+
+        runner.test('Tab navigation test', function() {
+            // Test that tab functions exist
+            assert(typeof boj.PHS_wci.wtab_select === 'function', 'wtab_select function should exist');
+            assert(typeof boj.PHS_wci.wtab_select_all === 'function', 'wtab_select_all function should exist');
+            
+            // Create mock tab elements for testing
+            const mockMenu = document.createElement('ul');
+            mockMenu.className = 'wtab_menu';
+            mockMenu.innerHTML = `
+                <li id="wtab_menu_par" class="wtab_active">Parameters</li>
+                <li id="wtab_menu_graph">Graph</li>
+                <li id="wtab_menu_table">Table</li>
+                <li id="wtab_menu_all">All</li>
+                <li id="wtab_menu_about">About</li>
+            `;
+            
+            const mockContent = document.createElement('div');
+            mockContent.innerHTML = `
+                <div id="wtab_cont_par" class="wtab_cont wtab_active">Parameters content</div>
+                <div id="wtab_cont_graph" class="wtab_cont">Graph content</div>
+                <div id="wtab_cont_table" class="wtab_cont">Table content</div>
+                <div id="wtab_cont_about" class="wtab_cont">About content</div>
+            `;
+            
+            document.body.appendChild(mockMenu);
+            document.body.appendChild(mockContent);
+            
+            try {
+                // Test switching to Graph tab
+                const graphTab = document.getElementById('wtab_menu_graph');
+                const paramTab = document.getElementById('wtab_menu_par');
+                
+                boj.PHS_wci.wtab_select(graphTab);
+                
+                assert(!paramTab.classList.contains('wtab_active'), 'Previous tab (Parameters) should lose active class');
+                assert(graphTab.classList.contains('wtab_active'), 'Clicked tab (Graph) should gain active class');
+                assert(document.getElementById('wtab_cont_par').classList.contains('wtab_active') === false, 'Previous content should be hidden');
+                assert(document.getElementById('wtab_cont_graph').classList.contains('wtab_active'), 'Selected content should be visible');
+                
+                // Test "All" tab functionality
+                boj.PHS_wci.wtab_select_all(['par', 'graph', 'table']);
+                
+                assert(document.getElementById('wtab_menu_all').classList.contains('wtab_active'), 'All tab should be active');
+                assert(document.getElementById('wtab_cont_par').classList.contains('wtab_active'), 'Parameters should be visible');
+                assert(document.getElementById('wtab_cont_graph').classList.contains('wtab_active'), 'Graph should be visible');
+                assert(document.getElementById('wtab_cont_table').classList.contains('wtab_active'), 'Table should be visible');
+                assert(document.getElementById('wtab_cont_about').classList.contains('wtab_active') === false, 'About should remain hidden');
+                
+            } finally {
+                // Clean up mock elements
+                document.body.removeChild(mockMenu);
+                document.body.removeChild(mockContent);
+            }
+        });
+
         // Run all tests when page loads
         window.onload = function() {
             setTimeout(() => {

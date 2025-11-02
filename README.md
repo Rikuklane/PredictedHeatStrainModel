@@ -17,19 +17,26 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 The original PHS model calculations remain unchanged. The following improvements were made to enhance usability, functionality, and code quality:
 
-1. **Multi-timestep support** - "Start simulation" → "Add timestep" workflow
-2. **Removed input parameter limits** - No artificial constraints on values
-3. **Excel export functionality** - Professional multi-sheet Excel files with proper formatting
-4. **UI button state management** - Proper enable/disable logic for workflow control
-5. **Code refactoring** - Improved readability, maintainability, and modern API structure
-6. **Comprehensive testing** - Extensive test suite to validate all functionality
+### 🎯 User Interface & Workflow
+- **Multi-timestep support** - "Start simulation" → "Add timestep" workflow
+- **Timestep validation** - Prevents duplicate or past end times with user-friendly error messages
+- **Tab navigation interface** - Clean tabbed UI for Parameters, Graph, Table, and About sections
+- **UI button state management** - Proper enable/disable logic for workflow control
+
+### 📊 Data Management & Export
+- **Excel export functionality** - Professional multi-sheet Excel files with proper formatting
+- **Selective parameter limits** - Removed artificial constraints for most scenarios, with scientific limits retained where appropriate
+
+### 🔧 Code Quality & Testing
+- **Code refactoring** - Improved readability, maintainability, and modern API structure
+- **Comprehensive testing** - Extensive test suite to validate all functionality
 
 ## How to Use
 1. Open `PHS.html` in a web browser
 2. Set simulation parameters (weight, height, etc.)
 3. Set environmental conditions (temperature, metabolism, etc.)
-4. Click "Start simulation"
-5. Add additional timesteps with "Add timestep" if needed
+4. Click "Start simulation" to begin the first timestep
+5. Add additional timesteps with "Add timestep" (validation prevents duplicate/past times)
 6. Export results with Excel export buttons
 
 ## Excel Export Features
@@ -43,6 +50,8 @@ Open `test_runner.html` in a browser to run comprehensive tests covering:
 
 - **Core PHS calculations** - Body surface area, temperature predictions, sweat rates, heat balance
 - **Multi-timestep workflows** - Step progression, parameter changes, time advancement
+- **Timestep validation** - Duplicate prevention, past time rejection, error handling
+- **Tab navigation** - UI interaction, content switching, "All" tab functionality
 - **Excel export functionality** - File generation, data organization, column formatting
 - **UI button states** - Start/Add timestep workflow, parameter locking, enable/disable logic
 - **Data validation** - Parameter consistency, type safety, cross-module integration
@@ -54,5 +63,5 @@ Open `test_runner.html` in a browser to run comprehensive tests covering:
 - Optional: Excel software for viewing exported files
 
 ## Future Plans
-- **Input Validation Enhancement** - Comprehensive parameter validation with proper min/max values based on scientific standards
 - **Excel Import Functionality** - Ability to load simulation parameters from Excel files for batch processing and reproducible research
+- **Advanced Validation** - Scientific parameter ranges with tooltips and guidance
