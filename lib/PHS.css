@@ -449,11 +449,12 @@ button:disabled:hover {
 }
 
 .parameter_symbol {
-    width: 90px;
+    width: 100px;
     font-weight: bold;
     text-align: right;
     flex-shrink: 0;
     font-size: 0.9em;
+    padding-right: 4px;
 }
 
 .parameter_local .parameter_symbol {
