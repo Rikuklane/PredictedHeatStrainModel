@@ -41,9 +41,8 @@ The original PHS model calculations remain unchanged. The following improvements
 6. Export results using the "Export to Excel" dropdown button (appears after first simulation)
 
 ## Excel Export Features
-- **Input Parameters** - Combined simulation + step parameters in one sheet
-- **Step Log Data** - Time series physiological data for graphing
-- **Results** - Final simulation outcomes
+- **Input** - Combined simulation + step parameters in one sheet
+- **Output** - Time series physiological data for graphing
 - Automatic file downloads with clear naming
 
 ## Testing
