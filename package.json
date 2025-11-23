@@ -1,0 +1,21 @@
+{
+  "name": "phs-heat-strain-model",
+  "version": "1.0.0",
+  "description": "Predicted Heat Strain Model - Test Suite",
+  "main": "tests/run-all.js",
+  "scripts": {
+    "test": "node tests/run-all.js"
+  },
+  "keywords": [
+    "heat-strain",
+    "PHS",
+    "ISO-7933",
+    "thermal-comfort"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "xlsx": "^0.18.5",
+    "jsdom": "^23.0.0"
+  }
+}
