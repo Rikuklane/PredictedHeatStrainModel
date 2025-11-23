@@ -68,10 +68,9 @@ const DECIMAL_PLACES = {
     SWmax: 0
 };
 
-// Tolerance of 1.0 accounts for rounding differences while keeping tests strict
+// Tolerance of 0.5 accounts for rounding to nearest integer/decimal
 // Values are rounded to match Excel precision before comparison
-// Note: Failures indicate calculation differences that should be investigated
-const TOLERANCE = 1.0;
+const TOLERANCE = 0.5;
 
 const TEST_SCENARIOS = [
     { file: 'env1_scenario1.xlsx', name: 'Environment 1 - Scenario 1' },
