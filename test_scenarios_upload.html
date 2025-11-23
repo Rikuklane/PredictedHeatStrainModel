@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHS Test Scenarios Runner (File Upload)</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .test-result { margin: 10px 0; padding: 5px; }
+        .pass { background-color: #d4edda; color: #155724; }
+        .fail { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        .warning { background-color: #fff3cd; color: #856404; }
+        pre { background: #f8f9fa; padding: 10px; overflow-x: auto; font-size: 0.9em; }
+        .summary { font-weight: bold; font-size: 1.2em; margin: 20px 0; }
+        .test-details { margin-left: 20px; font-size: 0.9em; }
+        button { padding: 10px 20px; margin: 10px 5px; font-size: 1em; cursor: pointer; }
+        .upload-area { margin: 20px 0; padding: 20px; border: 2px dashed #ccc; background: #f9f9f9; }
+        .file-list { margin-top: 10px; }
+        .file-item { padding: 5px; margin: 5px 0; background: white; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>PHS Test Scenarios Runner</h1>
+    <p>This test suite validates the PHS simulation against predefined test scenarios with expected outputs.</p>
+    
+    <div class="upload-area">
+        <h3>Upload Test Scenario Files</h3>
+        <p>Select one or more .xlsx files from the TestScenarios folder:</p>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" multiple onchange="handleFileSelect(event)">
+        <div class="file-list" id="fileList"></div>
+    </div>
+    
+    <div>
+        <button onclick="runAllLoadedTests()" id="runAllBtn" disabled>Run All Loaded Tests</button>
+        <button onclick="clearFiles()">Clear Files</button>
+    </div>
+    
+    <div id="test-results"></div>
+    
+    <!-- Load all library files -->
+    <script src="lib/parameter_data_obj.js"></script>
+    <script src="lib/canvas_util.js"></script>
+    <script src="lib/humidity_obj.js"></script>
+    <script src="lib/mean_rad_temp_obj.js"></script>
+    <script src="lib/data_table_obj.js"></script>
+    <script src="lib/diagram_util.js"></script>
+    <script src="lib/html_fragment_obj.js"></script>
+    <script src="lib/window_tab_util.js"></script>
+    <script src="lib/parameter_wci.js"></script>
+    <script src="lib/PHS.js"></script>
+    <script src="lib/PHS_run_simulation.js"></script>
+    <script src="lib/PHS_inpar_wci.js"></script>
+    <script src="lib/PHS_wci.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <script>
+        // Tolerance for floating point comparisons
+        const TOLERANCE = {
+            time: 0.01,        // Time in minutes
+            temperature: 0.1,  // Temperature in °C
+            sweat: 1,          // Sweat in grams
+            water: 1,          // Water loss in grams
+            default: 0.01      // Default tolerance
+        };
+
+        // Store loaded files
+        let loadedFiles = [];
+        let testResults = {
+            passed: 0,
+            failed: 0,
+            total: 0,
+            details: []
+        };
+
+        // Helper functions
+        function assertClose(actual, expected, tolerance, fieldName) {
+            const diff = Math.abs(actual - expected);
+            if (diff > tolerance) {
+                throw new Error(`${fieldName}: Expected ${expected} ± ${tolerance}, got ${actual} (diff: ${diff.toFixed(4)})`);
+            }
+        }
+
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            loadedFiles = files;
+            
+            const fileListDiv = document.getElementById('fileList');
+            const runAllBtn = document.getElementById('runAllBtn');
+            
+            if (files.length > 0) {
+                fileListDiv.innerHTML = '<strong>Loaded files:</strong><br>' + 
+                    files.map(f => `<div class="file-item">📄 ${f.name}</div>`).join('');
+                runAllBtn.disabled = false;
+            } else {
+                fileListDiv.innerHTML = '';
+                runAllBtn.disabled = true;
+            }
+        }
+
+        function clearFiles() {
+            loadedFiles = [];
+            document.getElementById('fileInput').value = '';
+            document.getElementById('fileList').innerHTML = '';
+            document.getElementById('runAllBtn').disabled = true;
+            document.getElementById('test-results').innerHTML = '';
+        }
+
+        function loadExcelFromFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        resolve(workbook);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                reader.onerror = function(error) {
+                    reject(error);
+                };
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        function extractSheetData(workbook, sheetName) {
+            if (!workbook.Sheets[sheetName]) {
+                throw new Error(`Sheet "${sheetName}" not found in workbook`);
+            }
+            const worksheet = workbook.Sheets[sheetName];
+            return XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        }
+
+        function processImportedTestData(inputData) {
+            // Reset simulation
+            boj.PHS.reset();
+            const run_sim = boj.PHS_run_sim.new_run_sim();
+            
+            const headers = inputData[0];
+            const simParamEndIndex = headers.indexOf('step_end_time');
+            
+            if (simParamEndIndex === -1) {
+                throw new Error('Could not find step_end_time column');
+            }
+            
+            const simHeaders = headers.slice(0, simParamEndIndex);
+            const stepHeaders = headers.slice(simParamEndIndex);
+            
+            if (inputData.length < 2) {
+                throw new Error('No data rows found');
+            }
+            
+            const firstRow = inputData[1];
+            
+            // Set simulation parameters
+            simHeaders.forEach((header, index) => {
+                const value = firstRow[index];
+                if (value !== undefined && value !== null && value !== '') {
+                    try {
+                        boj.PHS.par_swarm_sim.set_pid(header, parseFloat(value));
+                    } catch (error) {
+                        console.warn(`Could not set simulation parameter ${header}:`, error);
+                    }
+                }
+            });
+            
+            // Initialize simulation
+            boj.PHS.sim_init();
+            
+            // Parameter mapping
+            const paramMapping = {
+                'step_end_time': 'timestep',
+                'Pw': 'Pw_air',
+                'v_wal': 'v_walk',
+                'w_dir': 'walk_dir'
+            };
+            
+            // Process each step
+            for (let rowIndex = 1; rowIndex < inputData.length; rowIndex++) {
+                const row = inputData[rowIndex];
+                
+                if (!row || row.every(cell => cell === undefined || cell === null || cell === '')) {
+                    continue;
+                }
+                
+                // Set step parameters
+                stepHeaders.forEach((header, colOffset) => {
+                    const colIndex = simParamEndIndex + colOffset;
+                    const value = row[colIndex];
+                    
+                    if (value !== undefined && value !== null && value !== '') {
+                        try {
+                            const paramName = paramMapping[header] || header;
+                            boj.PHS.par_swarm_step.set_pid(paramName, parseFloat(value));
+                        } catch (error) {
+                            console.warn(`Could not set step parameter ${header}:`, error);
+                        }
+                    }
+                });
+                
+                // Run simulation
+                const isFirstStep = rowIndex === 1;
+                run_sim.run_simulation(`test_step_${rowIndex}`, isFirstStep);
+            }
+            
+            return run_sim;
+        }
+
+        function compareResults(actualResults, expectedResults) {
+            const errors = [];
+            const headers = expectedResults[0];
+            
+            // Find column indices in expected output
+            const timeIdx = headers.indexOf('time');
+            const tcreqIdx = headers.indexOf('Tcreq');
+            const tskIdx = headers.indexOf('Tsk');
+            const swgIdx = headers.indexOf('SWg');
+            const swtotgIdx = headers.indexOf('SWtotg');
+            const tcrIdx = headers.indexOf('Tcr');
+            const treIdx = headers.indexOf('Tre');
+            const tclIdx = headers.indexOf('Tcl');
+            const swIdx = headers.indexOf('SW');
+            const epreIdx = headers.indexOf('Epre');
+            const swreqIdx = headers.indexOf('SWreq');
+            const swmaxIdx = headers.indexOf('SWmax');
+            
+            // Compare each row (skip header)
+            for (let i = 1; i < expectedResults.length; i++) {
+                const expectedRow = expectedResults[i];
+                
+                // Skip empty rows
+                if (!expectedRow || expectedRow.every(cell => cell === undefined || cell === null || cell === '')) {
+                    continue;
+                }
+                
+                // Get actual result for this timestep
+                const actualRow = actualResults[i];
+                if (!actualRow) {
+                    errors.push(`Missing result row ${i}`);
+                    continue;
+                }
+                
+                try {
+                    // Compare time
+                    if (timeIdx >= 0 && expectedRow[timeIdx] !== undefined && expectedRow[timeIdx] !== '') {
+                        assertClose(actualRow[timeIdx], expectedRow[timeIdx], TOLERANCE.time, `Row ${i} - time`);
+                    }
+                    
+                    // Compare Tcreq (required core temperature)
+                    if (tcreqIdx >= 0 && expectedRow[tcreqIdx] !== undefined && expectedRow[tcreqIdx] !== '') {
+                        assertClose(actualRow[tcreqIdx], expectedRow[tcreqIdx], TOLERANCE.temperature, `Row ${i} - Tcreq`);
+                    }
+                    
+                    // Compare Tsk (skin temperature)
+                    if (tskIdx >= 0 && expectedRow[tskIdx] !== undefined && expectedRow[tskIdx] !== '') {
+                        assertClose(actualRow[tskIdx], expectedRow[tskIdx], TOLERANCE.temperature, `Row ${i} - Tsk`);
+                    }
+                    
+                    // Compare SWg (sweat rate)
+                    if (swgIdx >= 0 && expectedRow[swgIdx] !== undefined && expectedRow[swgIdx] !== '') {
+                        assertClose(actualRow[swgIdx], expectedRow[swgIdx], TOLERANCE.sweat, `Row ${i} - SWg`);
+                    }
+                    
+                    // Compare SWtotg (total sweat)
+                    if (swtotgIdx >= 0 && expectedRow[swtotgIdx] !== undefined && expectedRow[swtotgIdx] !== '') {
+                        assertClose(actualRow[swtotgIdx], expectedRow[swtotgIdx], TOLERANCE.sweat, `Row ${i} - SWtotg`);
+                    }
+                    
+                    // Compare Tcr (core temperature)
+                    if (tcrIdx >= 0 && expectedRow[tcrIdx] !== undefined && expectedRow[tcrIdx] !== '') {
+                        assertClose(actualRow[tcrIdx], expectedRow[tcrIdx], TOLERANCE.temperature, `Row ${i} - Tcr`);
+                    }
+                    
+                    // Compare Tre (rectal temperature)
+                    if (treIdx >= 0 && expectedRow[treIdx] !== undefined && expectedRow[treIdx] !== '') {
+                        assertClose(actualRow[treIdx], expectedRow[treIdx], TOLERANCE.temperature, `Row ${i} - Tre`);
+                    }
+                    
+                    // Compare Tcl (clothing temperature)
+                    if (tclIdx >= 0 && expectedRow[tclIdx] !== undefined && expectedRow[tclIdx] !== '') {
+                        assertClose(actualRow[tclIdx], expectedRow[tclIdx], TOLERANCE.temperature, `Row ${i} - Tcl`);
+                    }
+                    
+                    // Compare SW (sweat wetness)
+                    if (swIdx >= 0 && expectedRow[swIdx] !== undefined && expectedRow[swIdx] !== '') {
+                        assertClose(actualRow[swIdx], expectedRow[swIdx], TOLERANCE.default, `Row ${i} - SW`);
+                    }
+                    
+                    // Compare Epre (evaporative heat loss)
+                    if (epreIdx >= 0 && expectedRow[epreIdx] !== undefined && expectedRow[epreIdx] !== '') {
+                        assertClose(actualRow[epreIdx], expectedRow[epreIdx], TOLERANCE.default, `Row ${i} - Epre`);
+                    }
+                    
+                    // Compare SWreq (required sweat rate)
+                    if (swreqIdx >= 0 && expectedRow[swreqIdx] !== undefined && expectedRow[swreqIdx] !== '') {
+                        assertClose(actualRow[swreqIdx], expectedRow[swreqIdx], TOLERANCE.sweat, `Row ${i} - SWreq`);
+                    }
+                    
+                    // Compare SWmax (maximum sweat rate)
+                    if (swmaxIdx >= 0 && expectedRow[swmaxIdx] !== undefined && expectedRow[swmaxIdx] !== '') {
+                        assertClose(actualRow[swmaxIdx], expectedRow[swmaxIdx], TOLERANCE.sweat, `Row ${i} - SWmax`);
+                    }
+                } catch (error) {
+                    errors.push(error.message);
+                }
+            }
+            
+            return errors;
+        }
+
+        async function runTest(file) {
+            const startTime = Date.now();
+            const result = {
+                name: file.name,
+                file: file.name,
+                passed: false,
+                errors: [],
+                duration: 0
+            };
+            
+            try {
+                // Load the Excel file
+                const workbook = await loadExcelFromFile(file);
+                
+                // Extract Input and Output sheets
+                const inputData = extractSheetData(workbook, 'Input');
+                const outputData = extractSheetData(workbook, 'Output');
+                
+                if (!inputData || inputData.length === 0) {
+                    throw new Error('Input sheet is empty');
+                }
+                
+                if (!outputData || outputData.length === 0) {
+                    throw new Error('Output sheet is empty');
+                }
+                
+                // Run simulation with input data
+                const run_sim = processImportedTestData(inputData);
+                
+                // Extract actual results from step_log (this contains the full output)
+                const actualResults = [];
+                
+                // Get headers from step_log_tab_spec
+                const headers = ['time', 'Tcreq', 'Tsk', 'SWg', 'SWtotg', 'Tcr', 'Tre', 'Tcl', 'SW', 'Epre', 'SWreq', 'SWmax'];
+                actualResults.push(headers);
+                
+                // Get data rows from step_log (include all rows starting from index 0)
+                if (run_sim.step_log && run_sim.step_log.length > 0) {
+                    // Include all rows including the initial state at time 0
+                    for (let i = 0; i < run_sim.step_log.length; i++) {
+                        actualResults.push(run_sim.step_log[i]);
+                    }
+                }
+                
+                // Compare results
+                const errors = compareResults(actualResults, outputData);
+                
+                if (errors.length > 0) {
+                    result.errors = errors;
+                } else {
+                    result.passed = true;
+                }
+                
+            } catch (error) {
+                result.errors.push(error.message);
+            }
+            
+            result.duration = Date.now() - startTime;
+            return result;
+        }
+
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('test-results');
+            let html = '';
+            
+            const summary = `<div class="summary">
+                Test Results: ${results.passed}/${results.total} passed, 
+                ${results.failed} failed
+            </div>`;
+            
+            html += summary;
+            
+            results.details.forEach(result => {
+                const statusClass = result.passed ? 'pass' : 'fail';
+                const statusIcon = result.passed ? '✓' : '✗';
+                const status = result.passed ? 'PASS' : 'FAIL';
+                
+                html += `<div class="test-section">`;
+                html += `<div class="test-result ${statusClass}">${statusIcon} ${status}: ${result.name}</div>`;
+                html += `<div class="test-details">`;
+                html += `<div>File: ${result.file}</div>`;
+                html += `<div>Duration: ${result.duration}ms</div>`;
+                
+                if (result.errors.length > 0) {
+                    html += `<div class="warning">Errors (${result.errors.length}):</div>`;
+                    html += `<pre>${result.errors.join('\n')}</pre>`;
+                }
+                
+                html += `</div></div>`;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        async function runAllLoadedTests() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<div class="info">Running all tests...</div>';
+            
+            testResults = {
+                passed: 0,
+                failed: 0,
+                total: 0,
+                details: []
+            };
+            
+            for (const file of loadedFiles) {
+                testResults.total++;
+                const result = await runTest(file);
+                testResults.details.push(result);
+                
+                if (result.passed) {
+                    testResults.passed++;
+                } else {
+                    testResults.failed++;
+                }
+            }
+            
+            displayResults(testResults);
+        }
+    </script>
+</body>
+</html>
