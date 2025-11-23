@@ -41,22 +41,84 @@ The original PHS model calculations remain unchanged. The following improvements
 6. Export results using the "Export to Excel" dropdown button (appears after first simulation)
 
 ## Excel Export Features
-- **Input Parameters** - Combined simulation + step parameters in one sheet
-- **Step Log Data** - Time series physiological data for graphing
-- **Results** - Final simulation outcomes
+- **Input** - Combined simulation + step parameters in one sheet
+- **Output** - Time series physiological data for graphing
 - Automatic file downloads with clear naming
 
 ## Testing
-Open `test_runner.html` in a browser to run comprehensive tests covering:
 
-- **Core PHS calculations** - Body surface area, temperature predictions, sweat rates, heat balance
-- **Multi-timestep workflows** - Step progression, parameter changes, time advancement
-- **Timestep validation** - Duplicate prevention, past time rejection, error handling
-- **Tab navigation** - UI interaction, content switching, "All" tab functionality
-- **Excel export functionality** - File generation, data organization, column formatting
-- **UI button states** - Start/Add timestep workflow, parameter locking, enable/disable logic
-- **Data validation** - Parameter consistency, type safety, cross-module integration
-- **Physiological models** - Clothing insulation, heat transfer, psychrometric calculations
+### Prerequisites
+
+**Install Node.js and npm (Windows):**
+
+1. **Using winget (recommended):**
+   ```powershell
+   winget install OpenJS.NodeJS
+   ```
+
+2. **Manual installation:**
+   - Download from [nodejs.org](https://nodejs.org/)
+   - Run the installer
+   - Restart your terminal/IDE after installation
+
+3. **Verify installation:**
+   ```bash
+   node --version
+   npm --version
+   ```
+
+### Setup and Running Tests
+
+```bash
+# 1. Install dependencies (first time only)
+npm install
+
+# 2. Run all tests
+npm test
+```
+
+### Test Suite
+
+**Unit Tests:**
+- **Canvas utilities** - Matrix operations
+- **Parameter management** - Get/set operations, validation
+- **Humidity calculations** - Saturation pressure, ratios
+- **Mean radiant temperature** - Temperature calculations
+- **Data tables** - Creation, CSV export, data management
+- **PHS core** - Body surface area, temperature, sweat rates, heat balance
+- **PHS run simulation** - CSV/JSON export, simulation execution
+- **Multi-timestep workflows** - Step progression, time advancement, validation
+- **UI behavior** - Button states, tab navigation, parameter locking (using JSDOM)
+- **WCI (Web Component Interface)** - UI/DOM interactions with mocked environment
+- **Excel export** - Export functionality, data validation
+
+**Integration Tests:**
+- Full simulation validation against Excel scenario files
+- Expected to show differences when code changes
+
+### Continuous Integration
+Tests run automatically on GitHub Actions for every push and pull request on Node.js 18.x and 20.x.
+
+### Test Files Structure
+```
+tests/
+├── run-all.js              # Main test runner
+├── test-helper.js          # Shared utilities
+├── canvas-util.test.js
+├── parameter-data.test.js
+├── humidity.test.js
+├── mean-radiant-temp.test.js
+├── data-table.test.js
+├── phs-core.test.js
+├── phs-multistep.test.js
+├── phs-run-simulation.test.js
+├── ui-behavior.test.js     # UI tests with JSDOM
+├── wci.test.js
+├── excel-export.test.js
+├── integration.test.js
+└── resources/              # Test scenario files
+    └── *.xlsx
+```
 
 ## Dependencies
 - Modern web browser (Chrome, Firefox, Safari, Edge)

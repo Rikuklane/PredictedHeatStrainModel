@@ -592,9 +592,13 @@ table tr:hover {
 table th,
 table td {
     border-width: 1px;
-    padding: 4px;
+    padding: 4px 30px;
     border-style: none solid;
     text-align: center;
+}
+
+table th {
+    white-space: nowrap;
 }
 
 /* Table row highlighting for better readability */

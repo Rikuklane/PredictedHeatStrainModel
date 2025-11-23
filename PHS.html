@@ -85,8 +85,9 @@
       </div>
       <div id ="par_buttons" class="button-row">
         <div class="button-left">
-          <button type="button" onclick="wci.doPHS(true)">Start simulation</button>
-          <button type="button" onclick="wci.doPHS(false)">Add timestep</button>
+          <button type="button" id="startSimBtn" onclick="wci.doPHS(true)">Start simulation</button>
+          <button type="button" id="addTimestepBtn" onclick="wci.doPHS(false)" disabled>Add timestep</button>
+          <button type="button" id="importBtn" onclick="wci.importInputData()">📥 Simulation from Excel</button>
         </div>
         <div class="button-right">
           <div class="dropdown">
